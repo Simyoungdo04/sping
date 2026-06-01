@@ -1,0 +1,12 @@
+-- 오라클에서는 USER가 키워드기 때문에 MEMBER라는 식별자로 회원 테이블을 생성하지만
+-- 테이블에서 접두사를 붙일 시 USER를 사용할 수 있음
+-- 일반적으로 PK의 경우 숫자 또는 랜덤한 난수값을 사용하는 경우가 많음
+CREATE TABLE SEMI_MEMBER(
+	MEMBER_ID VARCHAR2(20) PRIMARY KEY,
+	MEMBER_PWD VARCHAR2(100) NOT NULL,
+	MEMBER_NAEM NVARCHAR2(30) NOT NULL,
+	ROLE VARCHAR2(20) NOT NULL,
+	STATUS CHAR(1) DEFAULT 'Y' CHECK(STATUS IN('Y', 'N'))
+);
+
+SELECT * FROM SEMI_MEMBER;

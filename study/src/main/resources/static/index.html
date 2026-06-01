@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>공지사항</title>
+	</head>
+	<body>
+		
+		<div id="outer" style="width: 1200px; height: auto; margin:auto; border: 1px solid lightgray;">
+				
+			
+		</div>
+		<div id="form">
+			<input type="text" id="writer" placeholder="작성자"/>
+			<input type="text" id="title" placeholder="제목"/>
+			<input type="text" id="content" placeholder="내용"/>
+			<hr>
+			<button onclick="postNotice();">공지사항 작성하기</button>
+		</div>
+		
+		<script>
+		
+			function postNotice(){
+				const writer = document.querySelector('#writer').value;
+				const title = document.querySelector('#title').value;
+				const content = document.querySelector('#content').value;
+				
+				const req = {
+					"noticeWriter" : writer,
+					"noticeTitle" : title,
+					"noticeContent" : content
+				};
+				
+				fetch('http://localhost/api/notices',{
+					method : 'POST',
+					headers: {
+						'Content-Type' : 'application/json'
+					},
+					body : JSON.stringify(req)
+				}).then(res => res.json())
+				  .then(data => {
+					// console.log('생성', data);
+					getNotices();
+				  });
+				
+				
+			};	
+		
+			function getNotices(){
+				
+				fetch('http://localhost/api/notices')
+					 .then(res => res.json())
+					 .then(data => {
+							console.log(data);
+							const el = data.map(e => `
+														<div>
+															<h3>${e.noticeTitle}</h3>
+															<p>
+																${e.noticeContent}
+															</p>
+															<label>게시글번호 :  ${e.noticeNo}</label><label>작성자 : ${e.noticeWriter}</label>
+														</div>
+													 `).join('');
+							document.querySelector('#outer').innerHTML = el;
+						  });
+				
+			};
+			
+			window.onload = () => {
+				getNotices();
+			}
+		</script>
+		
+	</body>
+</html>
