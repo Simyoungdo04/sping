@@ -12,3 +12,6 @@ mybatis:
   configuration:
      jdbc-type-for-null: NULL
      map-underscore-to-camel-case: true
+
+jwt:
+  secret: D9uLKVc4FE0IEheN3pLLEb8GKhHRsG8cdOxazHnEkRm3CGAeB+xVbt8Dbob1QhRB

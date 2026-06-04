@@ -4,12 +4,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.semi.auth.model.vo.CustomUserDetails;
+import com.kh.semi.exception.CustomAuthenticationException;
 import com.kh.semi.exception.DuplicateMemberIdException;
 import com.kh.semi.exception.FailSignUpException;
 import com.kh.semi.member.model.dao.MemberMapper;
 import com.kh.semi.member.model.dto.MemberDto;
+import com.kh.semi.member.model.dto.UpdatePasswordDto;
 import com.kh.semi.member.model.vo.Member;
+import com.kh.semi.token.model.dao.TokenMapper;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberService {
 
 	private final MemberMapper memberMapper;
+	private final TokenMapper tokenMapper;
 	private final PasswordEncoder passwordEncorder;
 
 	/*
@@ -51,6 +57,31 @@ public class MemberService {
 		// 일반적 -> Mapper에서 성공실패 여부를 반환 => 정수값으로
 		if(1 > result) {
 			throw new FailSignUpException("잠시 후 다시 시도해주세요.");
+		}
+	}
+
+	@Transactional
+	public void changePassword(CustomUserDetails user, @Valid UpdatePasswordDto upd) {
+		
+		// 사용자가 입력한 기존 비밀번호, DB에 저장된 기존 비밀번호 암호문
+		String memberPwd = upd.getMemberPwd();
+		String encodedPwd = user.getPassword();
+		
+		validatedPassword(memberPwd, encodedPwd);
+		String newPassword = passwordEncorder.encode(upd.getUpdatePwd());
+		memberMapper.changePassword(user.getUsername(), newPassword);
+	}
+
+	@Transactional
+	public void deleteByPassword(String password, CustomUserDetails user) {
+		validatedPassword(password, user.getPassword());
+		memberMapper.deleteByPassword(user.getUsername());
+		tokenMapper.deleteToken(user.getUsername());
+	}	
+	
+	private void validatedPassword(String rowPassword, String encodedPassword) {
+		if(!passwordEncorder.matches(rowPassword, encodedPassword)) {
+			throw new CustomAuthenticationException("비밀번호가 일치하지 않습니다.");
 		}
 	}
 	
