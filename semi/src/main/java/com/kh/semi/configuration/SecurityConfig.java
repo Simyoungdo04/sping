@@ -51,8 +51,10 @@ public class SecurityConfig {
 					   // POST방식으로 /members라는 요청이 오면 권한 체크 안 하고 전부 허용
 					   requests.requestMatchers(HttpMethod.POST, "/api/members", "/api/auth/login").permitAll();
 					   // PATCH방식으로 /api/members 라는 요청이 오면 인증 확인
-					   requests.requestMatchers(HttpMethod.PATCH, "/api/members").authenticated();
-					   requests.requestMatchers(HttpMethod.DELETE, "/api/members").authenticated();
+					   requests.requestMatchers(HttpMethod.PATCH, "/api/members", "/api/boards/**").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/api/members", "/api/boards/**").authenticated();
+					   requests.requestMatchers(HttpMethod.POST, "/api/boards").authenticated();
+					   requests.requestMatchers(HttpMethod.GET, "/api/boards/**").permitAll();
 				   }).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				   .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 				   .build();

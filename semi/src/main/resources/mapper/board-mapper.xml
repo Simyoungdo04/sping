@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.semi.board.model.dao.BoardMapper">
+	
+	<insert id="save"
+			parameterType="Board">
+		INSERT
+		  INTO
+		  	   SEMI_BOARD
+		VALUES
+			   (
+				SEQ_SBN.NEXTVAL
+			  , #{boardTitle}
+			  , #{boardContent}
+			  , #{boardWriter}
+			  , #{fileUrl}
+			  , DEFAULT
+			  , DEFAULT
+			   )
+	</insert>
+	
+	<sql id="boardColumn">
+		SELECT
+			   BOARD_NO
+			 , BOARD_TITLE
+			 , BOARD_WRITER
+			 , CREATE_DATE
+	</sql>
+	
+	<select id="findAll"
+		    resultType="boardDto">
+		<include refid="boardColumn" />
+		  FROM
+		  	   SEMI_BOARD
+		 WHERE
+		 	   STATUS ='Y'
+		 ORDER
+		 	BY
+		 	   CREATE_DATE DESC
+	</select>
+	
+	<select id="findByBoardNo"
+			resultType="BoardDto">
+		<include refid="boardColumn" />
+			 , BOARD_CONTENT
+			 , FILE_URL
+		  FROM
+		  	   SEMI_BOARD
+		 WHERE
+			   STATUS = 'Y'
+		   AND
+		   	   BOARD_NO = #{boardNo}
+	</select>
+	
+	<update id="deleteByBoardNo">
+		UPDATE
+			   SEMI_BOARD
+		   SET
+		   	   STATUS = 'N'
+		 WHERE
+		 	   BOARD_NO = #{boardNo}
+	</update>
+	
+	<update id="update">
+		UPDATE
+			   SEMI_BOARD
+		   SET
+		   	   BOARD_TITLE = #{boardTitle}
+		   	 , BOARD_CONTENT = #{boardContent}
+			 <if test="fileUrl != null">
+		   	 , FILE_URL = #{fileUrl}
+		   	 </if>
+		 WHERE
+		 	   BOARD_NO = #{boardNo}
+		   AND
+		   	   STATUS = 'Y'
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

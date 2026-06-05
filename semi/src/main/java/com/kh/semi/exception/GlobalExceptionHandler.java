@@ -1,9 +1,11 @@
 package com.kh.semi.exception;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,6 +53,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handlerUserNameNotFound(UsernameNotFoundException e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(404, "존재하지 않는 자원", null));
+	}
+	
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<ErrorResponse> handlerInvalidParameter(InvalidParameterException e){
+		return ResponseEntity.badRequest().body(new ErrorResponse(400, e.getMessage(), null));
 	}
 	
 }
