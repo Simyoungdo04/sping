@@ -55,12 +55,15 @@ public class SecurityConfig {
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
 					   // POST방식으로 /members라는 요청이 오면 권한 체크 안 하고 전부 허용
-					   requests.requestMatchers(HttpMethod.POST, "/api/members", "/api/auth/login").permitAll();
+					   requests.requestMatchers(HttpMethod.POST, "/api/members", "/api/auth/login", "api/auth/refresh").permitAll();
 					   // PATCH방식으로 /api/members 라는 요청이 오면 인증 확인
 					   requests.requestMatchers(HttpMethod.PATCH, "/api/members", "/api/boards/**").authenticated();
 					   requests.requestMatchers(HttpMethod.DELETE, "/api/members", "/api/boards/**").authenticated();
 					   requests.requestMatchers(HttpMethod.POST, "/api/boards", "/api/comments").authenticated();
-					   requests.requestMatchers(HttpMethod.GET, "/api/boards/**", "/api/comments", "/uploads/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/api/boards/**", "/api/comments", "/uploads/**", "/api/auth/logout").permitAll();
+					   // requests.requestMatchers("/api/admin").hasRole("ADMIN"); // 시큐리티가 자동으로 앞에 ROLE_을 붙여줌
+					   requests.requestMatchers("/api/admin").hasAuthority("ROLE_ADMIN"); // ROLE_ADMIN과 완전히 일치하는 지
+					   // requests.requestMatchers("/api/admin").hasAnyRole("ADMIN", "USER"); // 하나라도 있으면, 얘도 ROLE_을 붙여줌
 				   }).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				   .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 				   .build();

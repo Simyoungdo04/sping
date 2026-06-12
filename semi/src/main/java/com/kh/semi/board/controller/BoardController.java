@@ -36,6 +36,7 @@ public class BoardController {
 									 @RequestParam(name="file", required=false) MultipartFile file,
 									 @AuthenticationPrincipal CustomUserDetails user) {
 		// log.info("게시글 정보 : {} / 파일 정보 : {} / 유저 정보 : {}", board, file.getOriginalFilename(), user.getUsername());
+		log.info("여기들어옴");
 		boardService.save(board, file, user);
 		return ResponseEntity.status(201).build();
 	}

@@ -16,7 +16,7 @@ public interface TokenMapper {
 	@Delete("DELETE FROM SEMI_TOKEN WHERE MEMBER_ID = #{memberId}")
 	void deleteToken(String memberId);
 	
-	@Select("SELECT MEMBER_ID, TOKEN, EXPIRATION FROM SEMI_TOKE WHERE TOKEN = #{token}")
+	@Select("SELECT MEMBER_ID, TOKEN, EXPIRATION FROM SEMI_TOKEN WHERE TOKEN = #{token}")
 	RefreshToken findByToken(String token);
 	
 }

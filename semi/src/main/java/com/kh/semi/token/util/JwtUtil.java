@@ -41,7 +41,7 @@ public class JwtUtil {
 				   .issuedAt(new Date())
 // 				   .expiration(new Date(System.currentTimeMillis() + (1000 * 60 * 15)));
 // 				   .expiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMinutes(15)))
-				   .expiration(Date.from(Instant.now().plus(Duration.ofMinutes(540))))
+				   .expiration(Date.from(Instant.now().plus(Duration.ofMinutes(15))))
 				   .claim("memberName", user.getMemberName())
 				   .signWith(key)
 				   .compact();
@@ -51,7 +51,7 @@ public class JwtUtil {
 		return Jwts.builder()
 				   .subject(user.getUsername())
 				   .issuedAt(new Date())
-				   .expiration(Date.from(Instant.now().plus(Duration.ofDays(5))))
+				   .expiration(Date.from(Instant.now().plus(Duration.ofDays(1))))
 				   .claim("memberName", user.getMemberName())
 				   .signWith(key)
 				   .compact();

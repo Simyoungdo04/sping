@@ -17,7 +17,11 @@ public class ApiResponse<T> {
 	 */
 	// 200 성공응답
 	public static <T> ApiResponse<T> success(T data) {
-		return new ApiResponse<T>(200, "요청에 성공했습니다.", data);
+		return new ApiResponse<>(200, "요청에 성공했습니다.", data);
+	}
+	
+	public static <T> ApiResponse<T> success(String message, T data) {
+		return new ApiResponse<>(200, message, data);
 	}
 	
 	// 201 성공응답
